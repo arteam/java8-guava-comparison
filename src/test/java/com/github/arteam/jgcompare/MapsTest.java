@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -21,7 +22,7 @@ import static org.junit.Assert.assertThat;
  */
 public class MapsTest {
 
-    List<Team> teams = ImmutableList.of(
+    private final List<Team> teams = ImmutableList.of(
             new Team(12, "Chicago Blackhawks"),
             new Team(42, "St. Louis Blues"),
             new Team(88, "Colorado Avalanche"));
@@ -34,15 +35,14 @@ public class MapsTest {
                 88L, new Team(88, "Colorado Avalanche"));
         assertThat(Maps.uniqueIndex(teams, Team::getId), equalTo(expected));
 
-        assertThat(teams
-                .stream()
-                .collect(Collectors.toMap(Team::getId, (team) -> team)),
+        assertThat(teams.stream()
+                        .collect(Collectors.toMap(Team::getId, Function.identity())),
                 equalTo(expected));
     }
 
     private static class Team {
-        private final long id;
-        private final String name;
+        public final long id;
+        public final String name;
 
         private Team(long id, String name) {
             this.id = id;
