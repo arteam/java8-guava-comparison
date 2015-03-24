@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
@@ -31,6 +32,14 @@ public class IterablesTest {
     public void testAny() {
         assertTrue(Iterables.any(source, it -> it.length() > 2));
         assertTrue(source.stream().anyMatch(it -> it.length() > 2));
+    }
+
+    @Test
+    public void testConcat(){
+        List<String> addition = ImmutableList.of("ger", "d", "fm");
+        List<String> result = ImmutableList.of("as", "q", "def", "ger", "d", "fm");
+        assertEquals(ImmutableList.copyOf(Iterables.concat(source, addition)), result);
+        assertEquals(Stream.concat(source.stream(), addition.stream()).collect(Collectors.toList()), result);
     }
 
     @Test
