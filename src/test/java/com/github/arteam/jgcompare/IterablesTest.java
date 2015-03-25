@@ -43,6 +43,12 @@ public class IterablesTest {
     }
 
     @Test
+    public void testContains(){
+       assertTrue(Iterables.contains(source, "q"));
+       assertTrue(source.contains("q"));
+    }
+
+    @Test
     public void testRemoveIf() {
         Iterables.removeIf(source, it -> it.length() < 3);
         assertEquals(Arrays.asList("def"), source);
