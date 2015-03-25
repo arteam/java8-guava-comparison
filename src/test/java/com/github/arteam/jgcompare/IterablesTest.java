@@ -4,6 +4,7 @@ import com.google.common.collect.*;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,7 +36,7 @@ public class IterablesTest {
     }
 
     @Test
-    public void testConcat(){
+    public void testConcat() {
         List<String> addition = ImmutableList.of("ger", "d", "fm");
         List<String> result = ImmutableList.of("as", "q", "def", "ger", "d", "fm");
         assertEquals(ImmutableList.copyOf(Iterables.concat(source, addition)), result);
@@ -43,9 +44,23 @@ public class IterablesTest {
     }
 
     @Test
-    public void testContains(){
-       assertTrue(Iterables.contains(source, "q"));
-       assertTrue(source.contains("q"));
+    public void testContains() {
+        assertTrue(Iterables.contains(source, "q"));
+        assertTrue(source.contains("q"));
+    }
+
+    @Test
+    public void testCycle() {
+        Iterator<String> iterator = Iterables.cycle(source).iterator();
+        for (int i = 0; i < 10; i++) {
+            System.out.println(iterator.next());
+        }
+        long count = Stream.iterate(0, i -> (i + 1) % 3)
+                .map(i -> source.get(i))
+                .peek(System.out::println)
+                .limit(10)
+                .count();
+        assertEquals(count, 10);
     }
 
     @Test
