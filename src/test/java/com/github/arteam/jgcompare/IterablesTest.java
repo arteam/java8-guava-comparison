@@ -64,6 +64,18 @@ public class IterablesTest {
     }
 
     @Test
+    public void testFilter() {
+        Iterable<String> result = Iterables.filter(Iterables.filter(source, s -> s.length() > 1),
+                s -> s.startsWith("d"));
+        assertEquals(ImmutableList.copyOf(result), ImmutableList.of("def"));
+
+        assertEquals(source.stream()
+                .filter(s -> s.length() > 1)
+                .filter(s -> s.startsWith("d"))
+                .collect(Collectors.toList()), ImmutableList.of("def"));
+    }
+
+    @Test
     public void testRemoveIf() {
         Iterables.removeIf(source, it -> it.length() < 3);
         assertEquals(Arrays.asList("def"), source);
