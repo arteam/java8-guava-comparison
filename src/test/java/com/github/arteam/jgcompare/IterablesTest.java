@@ -76,14 +76,6 @@ public class IterablesTest {
     }
 
     @Test
-    public void testRemoveIf() {
-        Iterables.removeIf(source, it -> it.length() < 3);
-        assertEquals(Arrays.asList("def"), source);
-        source.removeIf(it -> it.length() < 3);
-        assertEquals(Arrays.asList("def"), source);
-    }
-
-    @Test
     public void testFind() {
         assertThat(Iterables.find(source, it -> it.length() == 1), equalTo("q"));
         assertThat(source.stream().filter(it -> it.length() == 1).findAny().get(), equalTo("q"));
@@ -96,6 +88,21 @@ public class IterablesTest {
     }
 
     @Test
+    public void testFrequency() {
+        List<String> newSource = ImmutableList.<String>builder()
+                .addAll(source)
+                .add("def")
+                .add("try")
+                .add("q")
+                .add("def")
+                .build();
+        assertEquals(Iterables.frequency(newSource, "def"), 3);
+        assertEquals(newSource.stream()
+                .filter(s -> s.equals("def"))
+                .count(), 3);
+    }
+
+    @Test
     public void testTryFind() {
         assertThat(Iterables.tryFind(source, it -> it.length() == 4).or("abcd"), equalTo("abcd"));
         assertThat(source.stream().filter(it -> it.length() == 4).findAny().orElse("abcd"), equalTo("abcd"));
@@ -105,6 +112,14 @@ public class IterablesTest {
     public void testIndexOf() {
         assertThat(Iterables.indexOf(source, it -> it.length() == 1), equalTo(1));
         assertThat(source.indexOf(source.stream().filter(it -> it.length() == 1).findAny().get()), equalTo(1));
+    }
+
+    @Test
+    public void testRemoveIf() {
+        Iterables.removeIf(source, it -> it.length() < 3);
+        assertEquals(Arrays.asList("def"), source);
+        source.removeIf(it -> it.length() < 3);
+        assertEquals(Arrays.asList("def"), source);
     }
 
     @Test
