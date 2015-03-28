@@ -109,6 +109,12 @@ public class IterablesTest {
     }
 
     @Test
+    public void testGetFirst(){
+        assertThat(Iterables.getFirst(source, ""), equalTo("as"));
+        assertThat(source.stream().findFirst().orElse(""), equalTo("as"));
+    }
+
+    @Test
     public void testIndexOf() {
         assertThat(Iterables.indexOf(source, it -> it.length() == 1), equalTo(1));
         assertThat(source.indexOf(source.stream().filter(it -> it.length() == 1).findAny().get()), equalTo(1));
