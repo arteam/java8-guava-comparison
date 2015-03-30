@@ -122,13 +122,13 @@ public class IterablesTest {
     @Test
     public void testGetFirst() {
         assertThat(Iterables.getFirst(source, ""), equalTo("as"));
-        assertThat(source.stream().findFirst().orElse(""), equalTo("as"));
+        assertThat(stream.findFirst().orElse(""), equalTo("as"));
     }
 
     @Test
     public void testGetLast() {
         assertThat(Iterables.getLast(source, ""), equalTo("def"));
-        assertThat(source.stream().skip(source.size() - 1).findFirst().orElse(""), equalTo("def"));
+        assertThat(stream.reduce((l, r) -> r).get(), equalTo("def"));
     }
 
     @Test
