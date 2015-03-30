@@ -135,7 +135,12 @@ public class IterablesTest {
     public void testIndexOf() {
         assertThat(Iterables.indexOf(source, it -> it.length() == 1), equalTo(1));
 
-        // No way for indexOf for Stream
+        // Rather tricky way
+        assertThat(StreamUtils.withIndex(stream)
+                .filter(e -> e.getElement().length() == 1)
+                .map(e -> e.getIndex())
+                .findFirst()
+                .get(), equalTo(1));
     }
 
     @Test
