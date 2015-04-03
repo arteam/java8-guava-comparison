@@ -128,13 +128,13 @@ public class IterablesTest {
     @Test
     public void testGetOnlyElement() {
         assertThat(Iterables.getOnlyElement(Iterables.filter(source, s -> s.length() == 3)), equalTo("def"));
-        assertThat(stream.filter(s->s.length()==3).findFirst().get(), equalTo("def"));
+        assertThat(stream.filter(s -> s.length() == 3).findFirst().get(), equalTo("def"));
     }
 
     @Test
     public void testGetOnlyElementWithDefault() {
         assertThat(Iterables.getOnlyElement(Iterables.filter(source, s -> s.length() == 4), "mann"), equalTo("mann"));
-        assertThat(stream.filter(s->s.length()==4).findFirst().orElse("mann"), equalTo("mann"));
+        assertThat(stream.filter(s -> s.length() == 4).findFirst().orElse("mann"), equalTo("mann"));
     }
 
     @Test
@@ -150,14 +150,15 @@ public class IterablesTest {
     }
 
     @Test
-    public void testRemoveIf() {
-        Iterables.removeIf(source, it -> it.length() < 3);
-        assertEquals(Arrays.asList("def"), source);
+    public void testIsEmpty() {
+        assertThat(Iterables.isEmpty(source), equalTo(false));
+        assertThat(stream.noneMatch(s -> true), equalTo(false));
+    }
 
-        List<String> removed = stream
-                .filter(((Predicate<String>) it -> it.length() < 3).negate())
-                .collect(Collectors.toList());
-        assertEquals(Arrays.asList("def"), removed);
+    @Test
+    public void testLimit() {
+        assertThat(Lists.newArrayList(Iterables.limit(source, 2)), equalTo(Arrays.asList("as", "q")));
+        assertThat(stream.limit(2).collect(Collectors.toList()), equalTo(Arrays.asList("as", "q")));
     }
 
     @Test
@@ -174,15 +175,21 @@ public class IterablesTest {
 
 
     @Test
+    public void testRemoveIf() {
+        Iterables.removeIf(source, it -> it.length() < 3);
+        assertEquals(Arrays.asList("def"), source);
+
+        List<String> removed = stream
+                .filter(((Predicate<String>) it -> it.length() < 3).negate())
+                .collect(Collectors.toList());
+        assertEquals(Arrays.asList("def"), removed);
+    }
+
+
+    @Test
     public void testSkip() {
         assertThat(Lists.newArrayList(Iterables.skip(source, 2)), equalTo(Arrays.asList("def")));
         assertThat(stream.skip(2).collect(Collectors.toList()), equalTo(Arrays.asList("def")));
-    }
-
-    @Test
-    public void testLimit() {
-        assertThat(Lists.newArrayList(Iterables.limit(source, 2)), equalTo(Arrays.asList("as", "q")));
-        assertThat(stream.limit(2).collect(Collectors.toList()), equalTo(Arrays.asList("as", "q")));
     }
 
 }
