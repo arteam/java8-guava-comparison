@@ -114,12 +114,6 @@ public class IterablesTest {
     }
 
     @Test
-    public void testTryFind() {
-        assertThat(Iterables.tryFind(source, it -> it.length() == 4).or("abcd"), equalTo("abcd"));
-        assertThat(stream.filter(it -> it.length() == 4).findAny().orElse("abcd"), equalTo("abcd"));
-    }
-
-    @Test
     public void testGetFirst() {
         assertThat(Iterables.getFirst(source, ""), equalTo("as"));
         assertThat(stream.findFirst().orElse(""), equalTo("as"));
@@ -171,6 +165,13 @@ public class IterablesTest {
         assertThat(Lists.newArrayList(Iterables.transform(source, String::length)), equalTo(Arrays.asList(2, 1, 3)));
         assertThat(stream.map(String::length).collect(Collectors.toList()), equalTo(Arrays.asList(2, 1, 3)));
     }
+
+    @Test
+    public void testTryFind() {
+        assertThat(Iterables.tryFind(source, it -> it.length() == 4).or("abcd"), equalTo("abcd"));
+        assertThat(stream.filter(it -> it.length() == 4).findAny().orElse("abcd"), equalTo("abcd"));
+    }
+
 
     @Test
     public void testSkip() {
