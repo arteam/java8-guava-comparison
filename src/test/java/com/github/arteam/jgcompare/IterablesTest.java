@@ -138,6 +138,12 @@ public class IterablesTest {
     }
 
     @Test
+    public void testGetOnlyElementWithDefault() {
+        assertThat(Iterables.getOnlyElement(Iterables.filter(source, s -> s.length() == 4), "mann"), equalTo("mann"));
+        assertThat(stream.filter(s->s.length()==4).findFirst().orElse("mann"), equalTo("mann"));
+    }
+
+    @Test
     public void testIndexOf() {
         assertThat(Iterables.indexOf(source, it -> it.length() == 1), equalTo(1));
 
