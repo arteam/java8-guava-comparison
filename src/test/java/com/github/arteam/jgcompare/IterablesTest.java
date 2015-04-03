@@ -132,6 +132,12 @@ public class IterablesTest {
     }
 
     @Test
+    public void testGetOnlyElement() {
+        assertThat(Iterables.getOnlyElement(Iterables.filter(source, s -> s.length() == 3)), equalTo("def"));
+        assertThat(stream.filter(s->s.length()==3).findFirst().get(), equalTo("def"));
+    }
+
+    @Test
     public void testIndexOf() {
         assertThat(Iterables.indexOf(source, it -> it.length() == 1), equalTo(1));
 
