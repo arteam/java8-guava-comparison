@@ -5,10 +5,13 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -160,6 +163,34 @@ public class IterablesTest {
     public void testLimit() {
         assertThat(Lists.newArrayList(Iterables.limit(source, 2))).isEqualTo(Arrays.asList("as", "q"));
         assertThat(stream.limit(2).collect(Collectors.toList())).isEqualTo(Arrays.asList("as", "q"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testPartition() {
+        List<String> source = ImmutableList.of("trash", "talk", "arg", "loose", "fade", "cross", "dump", "bust");
+        assertThat(Iterables.partition(source, 3)).containsExactly(
+                ImmutableList.of("trash", "talk", "arg"),
+                ImmutableList.of("loose", "fade", "cross"),
+                ImmutableList.of("dump", "bust"));
+
+        int partitionSize = 3;
+        List<List<String>> partitions = StreamUtils.withIndex(source.stream())
+                .collect(ArrayList::new, (lists, el) -> {
+                    int place = el.getIndex() % partitionSize;
+                    List<String> part;
+                    if (place == 0) {
+                        part = new ArrayList<>();
+                        lists.add(part);
+                    } else {
+                        part = lists.get(lists.size() - 1);
+                    }
+                    part.add(el.getElement());
+                }, ArrayList::addAll);
+        assertThat(partitions).containsExactly(
+                ImmutableList.of("trash", "talk", "arg"),
+                ImmutableList.of("loose", "fade", "cross"),
+                ImmutableList.of("dump", "bust"));
     }
 
     @Test
