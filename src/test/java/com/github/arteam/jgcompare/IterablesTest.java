@@ -237,6 +237,12 @@ public class IterablesTest {
     }
 
     @Test
+    public void testToArray() {
+        assertThat(Iterables.toArray(source, String.class)).isEqualTo(new String[]{"as", "q", "def"});
+        assertThat(stream.toArray(String[]::new)).isEqualTo(new String[]{"as", "q", "def"});
+    }
+
+    @Test
     public void testTransform() {
         assertThat(Lists.newArrayList(Iterables.transform(source, String::length))).isEqualTo(Arrays.asList(2, 1, 3));
         assertThat(stream.map(String::length).collect(Collectors.toList())).isEqualTo(Arrays.asList(2, 1, 3));
