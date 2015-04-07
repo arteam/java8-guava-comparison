@@ -231,6 +231,12 @@ public class IterablesTest {
     }
 
     @Test
+    public void testSkip() {
+        assertThat(Iterables.skip(source, 2)).containsOnly("def");
+        assertThat(stream.skip(2).collect(Collectors.toList())).containsOnly("def");
+    }
+
+    @Test
     public void testTransform() {
         assertThat(Lists.newArrayList(Iterables.transform(source, String::length))).isEqualTo(Arrays.asList(2, 1, 3));
         assertThat(stream.map(String::length).collect(Collectors.toList())).isEqualTo(Arrays.asList(2, 1, 3));
@@ -242,12 +248,6 @@ public class IterablesTest {
         assertThat(stream.filter(it -> it.length() == 4).findAny().orElse("abcd")).isEqualTo("abcd");
     }
 
-
-    @Test
-    public void testSkip() {
-        assertThat(Lists.newArrayList(Iterables.skip(source, 2))).isEqualTo(Arrays.asList("def"));
-        assertThat(stream.skip(2).collect(Collectors.toList())).isEqualTo(Arrays.asList("def"));
-    }
 
 }
 
