@@ -224,6 +224,11 @@ public class IterablesTest {
                 .collect(Collectors.toList())).containsExactly("q");
     }
 
+    @Test
+    public void testSize() {
+        assertThat(Iterables.size(source)).isEqualTo(3);
+        assertThat(stream.count()).isEqualTo(3);
+    }
 
     @Test
     public void testTransform() {
