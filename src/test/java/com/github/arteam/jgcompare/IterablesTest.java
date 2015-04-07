@@ -194,6 +194,16 @@ public class IterablesTest {
     }
 
     @Test
+    public void testRemoveAll() {
+        List<String> removed = ImmutableList.of("q", "d");
+        Iterables.removeAll(source, removed);
+        assertThat(source).containsExactly("as", "def");
+
+        assertThat(stream.filter(s -> !removed.contains(s))
+                .collect(Collectors.toList())).containsExactly("as", "def");
+    }
+
+    @Test
     public void testTransform() {
         assertThat(Lists.newArrayList(Iterables.transform(source, String::length))).isEqualTo(Arrays.asList(2, 1, 3));
         assertThat(stream.map(String::length).collect(Collectors.toList())).isEqualTo(Arrays.asList(2, 1, 3));
