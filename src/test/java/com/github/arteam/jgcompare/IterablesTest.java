@@ -204,6 +204,28 @@ public class IterablesTest {
     }
 
     @Test
+    public void testRemoveIf() {
+        Iterables.removeIf(source, it -> it.length() < 3);
+        assertThat(Arrays.asList("def")).isEqualTo(source);
+
+        List<String> removed = stream
+                .filter(((Predicate<String>) it -> it.length() < 3).negate())
+                .collect(Collectors.toList());
+        assertThat(Arrays.asList("def")).isEqualTo(removed);
+    }
+
+    @Test
+    public void testRetainAll() {
+        List<String> removed = ImmutableList.of("q", "d");
+        Iterables.retainAll(source, removed);
+        assertThat(source).containsExactly("q");
+
+        assertThat(stream.filter(s -> removed.contains(s))
+                .collect(Collectors.toList())).containsExactly("q");
+    }
+
+
+    @Test
     public void testTransform() {
         assertThat(Lists.newArrayList(Iterables.transform(source, String::length))).isEqualTo(Arrays.asList(2, 1, 3));
         assertThat(stream.map(String::length).collect(Collectors.toList())).isEqualTo(Arrays.asList(2, 1, 3));
@@ -213,18 +235,6 @@ public class IterablesTest {
     public void testTryFind() {
         assertThat(Iterables.tryFind(source, it -> it.length() == 4).or("abcd")).isEqualTo("abcd");
         assertThat(stream.filter(it -> it.length() == 4).findAny().orElse("abcd")).isEqualTo("abcd");
-    }
-
-
-    @Test
-    public void testRemoveIf() {
-        Iterables.removeIf(source, it -> it.length() < 3);
-        assertThat(Arrays.asList("def")).isEqualTo(source);
-
-        List<String> removed = stream
-                .filter(((Predicate<String>) it -> it.length() < 3).negate())
-                .collect(Collectors.toList());
-        assertThat(Arrays.asList("def")).isEqualTo(removed);
     }
 
 
