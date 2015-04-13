@@ -170,6 +170,7 @@ public class IterablesTest {
                 ImmutableList.of("loose", "fade", "cross"),
                 ImmutableList.of("dump", "bust"));
 
+        // Hand-made collector
         int partitionSize = 3;
         List<List<String>> partitions = StreamUtils.withIndex(source.stream())
                 .collect(ArrayList::new, (lists, el) -> {
@@ -187,59 +188,17 @@ public class IterablesTest {
                 ImmutableList.of("trash", "talk", "arg"),
                 ImmutableList.of("loose", "fade", "cross"),
                 ImmutableList.of("dump", "bust"));
-    }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testPartitionClumsy() {
-        List<String> source = ImmutableList.of("trash", "talk", "arg", "loose", "fade", "cross", "dump", "bust");
-        int partitionSize = 3;
-        List<List<String>> partitions = StreamUtils.withIndex(source.stream())
-                .collect(new Collector<StreamUtils.ElementIndex<String>, List<List<String>>, List<List<String>>>() {
-                             @Override
-                             public Supplier<List<List<String>>> supplier() {
-                                 return ArrayList::new;
-                             }
-
-                             @Override
-                             public BiConsumer<List<List<String>>, StreamUtils.ElementIndex<String>> accumulator() {
-                                 return (lists, el) -> {
-                                     int place = el.getIndex() % partitionSize;
-                                     List<String> part;
-                                     if (place == 0) {
-                                         part = new ArrayList<>();
-                                         lists.add(part);
-                                     } else {
-                                         part = lists.get(lists.size() - 1);
-                                     }
-                                     part.add(el.getElement());
-                                 };
-                             }
-
-                             @Override
-                             public BinaryOperator<List<List<String>>> combiner() {
-                                 return (first, second) -> {
-                                     first.addAll(second);
-                                     return first;
-                                 };
-                             }
-
-                             @Override
-                             public Function<List<List<String>>, List<List<String>>> finisher() {
-                                 return Function.identity();
-                             }
-
-                             @Override
-                             public Set<Characteristics> characteristics() {
-                                 return EnumSet.of(Characteristics.CONCURRENT, Characteristics.UNORDERED);
-                             }
-                         }
-                );
-        assertThat(partitions).containsExactly(
+        // Grouping collector
+        assertThat(StreamUtils.withIndex(source.stream())
+                .collect(Collectors.groupingBy(el -> el.getIndex() / partitionSize,
+                        Collectors.mapping(el -> el.getElement(), Collectors.toList())))
+                .values()).containsExactly(
                 ImmutableList.of("trash", "talk", "arg"),
                 ImmutableList.of("loose", "fade", "cross"),
                 ImmutableList.of("dump", "bust"));
     }
+
 
     @Test
     public void testRemoveAll() {
