@@ -286,6 +286,13 @@ public class IterablesTest {
         assertThat(stream.filter(it -> it.length() == 4).findAny().orElse("abcd")).isEqualTo("abcd");
     }
 
+    @Test
+    public void testToString() {
+        assertThat(Iterables.toString(source)).isEqualTo("[as, q, def]");
+        assertThat(stream.collect(Collectors.joining(", ", "[", "]"))).isEqualTo("[as, q, def]");
+
+    }
+
 
 }
 
