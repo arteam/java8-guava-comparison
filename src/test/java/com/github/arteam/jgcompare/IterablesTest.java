@@ -199,6 +199,31 @@ public class IterablesTest {
                 ImmutableList.of("dump", "bust"));
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testPaddedPartitionIndex() {
+        List<String> source = ImmutableList.of("trash", "talk", "arg", "loose", "fade", "cross", "dump", "bust");
+        assertThat(Iterables.paddedPartition(source, 3)).containsExactly(
+                ImmutableList.of("trash", "talk", "arg"),
+                ImmutableList.of("loose", "fade", "cross"),
+                Arrays.asList("dump", "bust", null));
+
+        Collection<List<String>> partitions = StreamUtils.withIndex(source.stream())
+                .collect(Collectors.collectingAndThen(Collectors.groupingBy(el -> el.getIndex() / 3,
+                        Collectors.mapping(el -> el.getElement(), Collectors.toList())), map -> {
+                    List<String> partition = map.get(map.size() - 1);
+                    int i = partition.size();
+                    while (i++ < 3) {
+                        partition.add(null);
+                    }
+                    return map;
+                })).values();
+        assertThat(partitions).containsExactly(
+                ImmutableList.of("trash", "talk", "arg"),
+                ImmutableList.of("loose", "fade", "cross"),
+                Arrays.asList("dump", "bust", null));
+    }
+
 
     @Test
     public void testRemoveAll() {
