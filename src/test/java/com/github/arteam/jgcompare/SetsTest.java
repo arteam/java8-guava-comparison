@@ -22,6 +22,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class SetsTest {
 
+    Set<String> first = ImmutableSet.of("tweak", "perf", "bully", "vertex");
+    Set<String> second = ImmutableSet.of("perf", "moan", "tweak");
+
     @Test
     @SuppressWarnings("unchecked")
     public void testCartesianProduct() {
@@ -48,8 +51,6 @@ public class SetsTest {
 
     @Test
     public void testDifference() {
-        Set<String> first = ImmutableSet.of("tweak", "perf", "bully", "vertex");
-        Set<String> second = ImmutableSet.of("perf", "moan", "tweak");
         assertThat(Sets.difference(first, second)).containsOnly("bully", "vertex");
 
         assertThat(first.stream()
@@ -60,8 +61,6 @@ public class SetsTest {
 
     @Test
     public void testSymmetricDifference() {
-        Set<String> first = ImmutableSet.of("tweak", "perf", "bully", "vertex");
-        Set<String> second = ImmutableSet.of("perf", "moan", "tweak");
         assertThat(Sets.symmetricDifference(first, second)).containsOnly("bully", "vertex", "moan");
 
         assertThat(Stream.concat(first.stream().filter(s -> !second.contains(s)),
@@ -69,5 +68,12 @@ public class SetsTest {
                 .collect(Collectors.toSet()))
                 .containsOnly("bully", "vertex", "moan");
 
+    }
+
+    @Test
+    public void testUnion() {
+        assertThat(Sets.union(first, second)).containsOnly("tweak", "perf", "bully", "vertex", "moan");
+        assertThat(Stream.concat(first.stream(), second.stream()).collect(Collectors.toSet()))
+                .containsOnly("tweak", "perf", "bully", "vertex", "moan");
     }
 }
