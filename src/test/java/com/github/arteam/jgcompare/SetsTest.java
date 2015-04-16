@@ -44,4 +44,17 @@ public class SetsTest {
                 ImmutableList.of("2", "arch"),
                 ImmutableList.of("2", "gamble"));
     }
+
+    @Test
+    public void testDifference() {
+        Set<String> first = ImmutableSet.of("tweak", "perf", "bully", "vertex");
+        Set<String> second = ImmutableSet.of("perf", "moan", "tweak");
+        Sets.SetView<String> diff = Sets.difference(first, second);
+        assertThat(diff).containsOnly("bully", "vertex");
+
+        assertThat(first.stream()
+                .filter(s -> !second.contains(s))
+                .collect(Collectors.toSet()))
+                .containsOnly("bully", "vertex");
+    }
 }
