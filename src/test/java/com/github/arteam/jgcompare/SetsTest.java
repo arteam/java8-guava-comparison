@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,12 +50,24 @@ public class SetsTest {
     public void testDifference() {
         Set<String> first = ImmutableSet.of("tweak", "perf", "bully", "vertex");
         Set<String> second = ImmutableSet.of("perf", "moan", "tweak");
-        Sets.SetView<String> diff = Sets.difference(first, second);
-        assertThat(diff).containsOnly("bully", "vertex");
+        assertThat(Sets.difference(first, second)).containsOnly("bully", "vertex");
 
         assertThat(first.stream()
                 .filter(s -> !second.contains(s))
                 .collect(Collectors.toSet()))
                 .containsOnly("bully", "vertex");
+    }
+
+    @Test
+    public void testSymmetricDifference() {
+        Set<String> first = ImmutableSet.of("tweak", "perf", "bully", "vertex");
+        Set<String> second = ImmutableSet.of("perf", "moan", "tweak");
+        assertThat(Sets.symmetricDifference(first, second)).containsOnly("bully", "vertex", "moan");
+
+        assertThat(Stream.concat(first.stream().filter(s -> !second.contains(s)),
+                second.stream().filter(s -> !first.contains(s)))
+                .collect(Collectors.toSet()))
+                .containsOnly("bully", "vertex", "moan");
+
     }
 }
