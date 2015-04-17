@@ -41,9 +41,10 @@ public class IterablesTest {
     @Test
     public void testConcat() {
         List<String> addition = ImmutableList.of("ger", "d", "fm");
-        List<String> result = ImmutableList.of("as", "q", "def", "ger", "d", "fm");
-        assertThat(ImmutableList.copyOf(Iterables.concat(source, addition))).isEqualTo(result);
-        assertThat(Stream.concat(stream, addition.stream()).collect(Collectors.toList())).isEqualTo(result);
+        assertThat(ImmutableList.copyOf(Iterables.concat(source, addition)))
+                .containsOnly("as", "q", "def", "ger", "d", "fm");
+        assertThat(Stream.concat(stream, addition.stream()).collect(Collectors.toList()))
+                .containsOnly("as", "q", "def", "ger", "d", "fm");
     }
 
     @Test
@@ -64,22 +65,24 @@ public class IterablesTest {
         assertThat(expected).isEqualTo(cycled);
 
         String[] streamAsArray = stream.toArray(String[]::new);
-        assertThat(expected).isEqualTo(IntStream.iterate(0, i -> (i + 1) % 3)
+        assertThat(IntStream.iterate(0, i -> (i + 1) % 3)
                 .mapToObj(i -> streamAsArray[i])
                 .limit(10)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList()))
+                .isEqualTo(expected);
     }
 
     @Test
     public void testFilter() {
         Iterable<String> result = Iterables.filter(Iterables.filter(source, s -> s.length() > 1),
                 s -> s.startsWith("d"));
-        assertThat(ImmutableList.copyOf(result)).isEqualTo(ImmutableList.of("def"));
+        assertThat(ImmutableList.copyOf(result)).containsOnly("def");
 
         assertThat(stream
                 .filter(s -> s.length() > 1)
                 .filter(s -> s.startsWith("d"))
-                .collect(Collectors.toList())).isEqualTo(ImmutableList.of("def"));
+                .collect(Collectors.toList()))
+                .containsOnly("def");
     }
 
     @Test
@@ -104,12 +107,11 @@ public class IterablesTest {
                 .add("q")
                 .add("def")
                 .build();
-        Stream<String> stream = source.stream();
-
         assertThat(Iterables.frequency(source, "def")).isEqualTo(3);
-        assertThat(stream
+        assertThat(source.stream()
                 .filter(s -> s.equals("def"))
-                .count()).isEqualTo(3);
+                .count())
+                .isEqualTo(3);
     }
 
     @Test
@@ -157,8 +159,8 @@ public class IterablesTest {
 
     @Test
     public void testLimit() {
-        assertThat(Lists.newArrayList(Iterables.limit(source, 2))).isEqualTo(Arrays.asList("as", "q"));
-        assertThat(stream.limit(2).collect(Collectors.toList())).isEqualTo(Arrays.asList("as", "q"));
+        assertThat(Lists.newArrayList(Iterables.limit(source, 2))).containsOnly("as", "q");
+        assertThat(stream.limit(2).collect(Collectors.toList())).containsOnly("as", "q");
     }
 
     @Test
@@ -238,12 +240,11 @@ public class IterablesTest {
     @Test
     public void testRemoveIf() {
         Iterables.removeIf(source, it -> it.length() < 3);
-        assertThat(Arrays.asList("def")).isEqualTo(source);
+        assertThat(source).containsOnly("def");
 
-        List<String> removed = stream
+        assertThat(stream
                 .filter(((Predicate<String>) it -> it.length() < 3).negate())
-                .collect(Collectors.toList());
-        assertThat(Arrays.asList("def")).isEqualTo(removed);
+                .collect(Collectors.toList())).containsOnly("def");
     }
 
     @Test
@@ -253,7 +254,8 @@ public class IterablesTest {
         assertThat(source).containsExactly("q");
 
         assertThat(stream.filter(s -> removed.contains(s))
-                .collect(Collectors.toList())).containsExactly("q");
+                .collect(Collectors.toList()))
+                .containsExactly("q");
     }
 
     @Test
@@ -276,8 +278,8 @@ public class IterablesTest {
 
     @Test
     public void testTransform() {
-        assertThat(Lists.newArrayList(Iterables.transform(source, String::length))).isEqualTo(Arrays.asList(2, 1, 3));
-        assertThat(stream.map(String::length).collect(Collectors.toList())).isEqualTo(Arrays.asList(2, 1, 3));
+        assertThat(Lists.newArrayList(Iterables.transform(source, String::length))).containsOnly(2, 1, 3);
+        assertThat(stream.map(String::length).collect(Collectors.toList())).containsOnly(2, 1, 3);
     }
 
     @Test
