@@ -1,14 +1,11 @@
 package com.github.arteam.jgcompare;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
+import com.google.common.collect.*;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -37,5 +34,30 @@ public class MapsTest {
 
         assertThat(teams.stream().collect(Collectors.toMap(Team::getId, Function.identity())))
                 .isEqualTo(expected);
+    }
+
+    @Test
+    public void testAsNavigableMap() {
+        Map<Integer, String> teams = ImmutableMap.<Integer, String>builder()
+                .put(21, "Boston Bruins")
+                .put(24, "Los Angeles Kings")
+                .put(12, "Chicago Blackhawks")
+                .put(42, "St. Louis Blues")
+                .put(29, "Arizona Coyotes")
+                .put(92, "Winnipeg Jets")
+                .put(88, "Colorado Avalanche")
+                .build();
+        Map<Integer, String> expected = ImmutableSortedMap.of(12, "Chicago Blackhawks", 42, "St. Louis Blues", 88, "Colorado Avalanche");
+
+        Set<Integer> source = ImmutableSortedSet.of(42, 88, 12);
+        assertThat(Maps.asMap(source, teams::get)).isEqualTo(expected);
+
+        Map<Integer, String> result = source.stream()
+                .collect(Collectors.toMap(Function.identity(), teams::get,
+                        (s1, s2) -> {
+                            throw new IllegalArgumentException("Two values for the same key");
+                        },
+                        TreeMap::new));
+        assertThat(result).isEqualTo(expected);
     }
 }
