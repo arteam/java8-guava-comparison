@@ -3,6 +3,7 @@ package com.github.arteam.jgcompare;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.util.List;
@@ -11,8 +12,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Date: 5/15/14
@@ -33,11 +33,10 @@ public class MapsTest {
                 12L, new Team(12, "Chicago Blackhawks"),
                 42L, new Team(42, "St. Louis Blues"),
                 88L, new Team(88, "Colorado Avalanche"));
-        assertThat(Maps.uniqueIndex(teams, Team::getId), equalTo(expected));
+        assertThat(Maps.uniqueIndex(teams, Team::getId)).isEqualTo(expected);
 
-        assertThat(teams.stream()
-                        .collect(Collectors.toMap(Team::getId, Function.identity())),
-                equalTo(expected));
+        assertThat(teams.stream().collect(Collectors.toMap(Team::getId, Function.identity())))
+                .isEqualTo(expected);
     }
 
     private static class Team {
