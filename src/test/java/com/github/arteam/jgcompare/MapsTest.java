@@ -38,38 +38,4 @@ public class MapsTest {
         assertThat(teams.stream().collect(Collectors.toMap(Team::getId, Function.identity())))
                 .isEqualTo(expected);
     }
-
-    private static class Team {
-        public final long id;
-        public final String name;
-
-        private Team(long id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        private long getId() {
-            return id;
-        }
-
-        private String getName() {
-            return name;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o instanceof Team) {
-                Team that = (Team) o;
-                return Objects.equals(id, that.id) && Objects.equals(name, that.name);
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, name);
-        }
-
-
-    }
 }
