@@ -49,7 +49,7 @@ public class MapsTest {
                 .build();
         Map<Integer, String> expected = ImmutableSortedMap.of(12, "Chicago Blackhawks", 42, "St. Louis Blues", 88, "Colorado Avalanche");
 
-        Set<Integer> source = ImmutableSortedSet.of(42, 88, 12);
+        NavigableSet<Integer> source = ImmutableSortedSet.of(42, 88, 12);
         assertThat(Maps.asMap(source, teams::get)).isEqualTo(expected);
 
         Map<Integer, String> result = source.stream()
@@ -59,5 +59,24 @@ public class MapsTest {
                         },
                         TreeMap::new));
         assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    public void testSetAsMap() {
+        Map<Integer, String> teams = ImmutableMap.<Integer, String>builder()
+                .put(21, "Boston Bruins")
+                .put(24, "Los Angeles Kings")
+                .put(12, "Chicago Blackhawks")
+                .put(42, "St. Louis Blues")
+                .put(29, "Arizona Coyotes")
+                .put(92, "Winnipeg Jets")
+                .put(88, "Colorado Avalanche")
+                .build();
+
+        Map<Integer, String> expected = ImmutableMap.of(12, "Chicago Blackhawks", 42, "St. Louis Blues", 88, "Colorado Avalanche");
+        Set<Integer> source = ImmutableSet.of(42, 88, 12);
+
+        assertThat(Maps.asMap(source, teams::get)).isEqualTo(expected);
+        assertThat(source.stream().collect(Collectors.toMap(Function.identity(), teams::get))).isEqualTo(expected);
     }
 }
