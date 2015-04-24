@@ -22,13 +22,23 @@ import static org.assertj.core.data.MapEntry.entry;
  */
 public class MapsTest {
 
-    private final List<Team> teams = ImmutableList.of(
-            new Team(12, "Chicago Blackhawks"),
-            new Team(42, "St. Louis Blues"),
-            new Team(88, "Colorado Avalanche"));
+    Map<Integer, String> teams = ImmutableMap.<Integer, String>builder()
+            .put(21, "Boston Bruins")
+            .put(24, "Los Angeles Kings")
+            .put(12, "Chicago Blackhawks")
+            .put(42, "St. Louis Blues")
+            .put(29, "Arizona Coyotes")
+            .put(92, "Winnipeg Jets")
+            .put(88, "Colorado Avalanche")
+            .build();
+
 
     @Test
     public void testUniqueIndex() {
+        List<Team> teams = ImmutableList.of(
+                new Team(12, "Chicago Blackhawks"),
+                new Team(42, "St. Louis Blues"),
+                new Team(88, "Colorado Avalanche"));
         Map<Long, Team> expected = ImmutableMap.of(
                 12L, new Team(12, "Chicago Blackhawks"),
                 42L, new Team(42, "St. Louis Blues"),
@@ -41,15 +51,6 @@ public class MapsTest {
 
     @Test
     public void testAsNavigableMap() {
-        Map<Integer, String> teams = ImmutableMap.<Integer, String>builder()
-                .put(21, "Boston Bruins")
-                .put(24, "Los Angeles Kings")
-                .put(12, "Chicago Blackhawks")
-                .put(42, "St. Louis Blues")
-                .put(29, "Arizona Coyotes")
-                .put(92, "Winnipeg Jets")
-                .put(88, "Colorado Avalanche")
-                .build();
         Map<Integer, String> expected = ImmutableSortedMap.of(12, "Chicago Blackhawks", 42, "St. Louis Blues", 88, "Colorado Avalanche");
 
         NavigableSet<Integer> source = ImmutableSortedSet.of(42, 88, 12);
@@ -66,16 +67,6 @@ public class MapsTest {
 
     @Test
     public void testSetAsMap() {
-        Map<Integer, String> teams = ImmutableMap.<Integer, String>builder()
-                .put(21, "Boston Bruins")
-                .put(24, "Los Angeles Kings")
-                .put(12, "Chicago Blackhawks")
-                .put(42, "St. Louis Blues")
-                .put(29, "Arizona Coyotes")
-                .put(92, "Winnipeg Jets")
-                .put(88, "Colorado Avalanche")
-                .build();
-
         Map<Integer, String> expected = ImmutableMap.of(12, "Chicago Blackhawks", 42, "St. Louis Blues", 88, "Colorado Avalanche");
         Set<Integer> source = ImmutableSet.of(42, 88, 12);
 
@@ -85,15 +76,6 @@ public class MapsTest {
 
     @Test
     public void testDifference() {
-        Map<Integer, String> teams = ImmutableMap.<Integer, String>builder()
-                .put(21, "Boston Bruins")
-                .put(24, "Los Angeles Kings")
-                .put(12, "Chicago Blackhawks")
-                .put(42, "St. Louis Blues")
-                .put(29, "Arizona Coyotes")
-                .put(92, "Winnipeg Jets")
-                .put(88, "Colorado Avalanche")
-                .build();
         Map<Integer, String> stanleyCupWinners = ImmutableMap.<Integer, String>builder()
                 .put(21, "Boston Bruins")
                 .put(24, "Los Angeles Kings")
@@ -108,5 +90,16 @@ public class MapsTest {
                 .filter(e -> !stanleyCupWinners.containsKey(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
                 .contains(entry(42, "St. Louis Blues"), entry(92, "Winnipeg Jets"), entry(29, "Arizona Coyotes"));
+    }
+
+    @Test
+    public void testFilterEntries() {
+        assertThat(Maps.filterEntries(teams, e -> e.getKey() > 20 && e.getValue().startsWith("C")))
+                .containsOnly(entry(88, "Colorado Avalanche"));
+
+        assertThat(teams.entrySet().stream()
+                .filter(e -> e.getKey() > 20 && e.getValue().startsWith("C"))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                .containsOnly(entry(88, "Colorado Avalanche"));
     }
 }
