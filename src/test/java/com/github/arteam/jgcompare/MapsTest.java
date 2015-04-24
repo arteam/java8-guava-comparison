@@ -1,5 +1,6 @@
 package com.github.arteam.jgcompare;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.*;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.data.MapEntry;
@@ -12,7 +13,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.MapEntry.entry;
+import static org.assertj.core.api.Assertions.entry;
 
 /**
  * Date: 5/15/14
@@ -113,5 +114,15 @@ public class MapsTest {
                 .containsOnly(entry(88, "Colorado Avalanche"),
                         entry(92, "Winnipeg Jets"));
 
+    }
+
+    @Test
+    public void testFilterValues() {
+        Splitter splitter = Splitter.on(" ");
+        assertThat(Maps.filterValues(teams, v -> Iterables.getLast(splitter.split(v)).startsWith("B")))
+                .containsOnly(entry(21, "Boston Bruins"), entry(12, "Chicago Blackhawks"), entry(42, "St. Louis Blues"));
+        assertThat(teams.entrySet().stream().filter(e -> Iterables.getLast(splitter.split(e.getValue())).startsWith("B"))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                .containsOnly(entry(21, "Boston Bruins"), entry(12, "Chicago Blackhawks"), entry(42, "St. Louis Blues"));
     }
 }
