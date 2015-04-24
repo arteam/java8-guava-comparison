@@ -102,4 +102,16 @@ public class MapsTest {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
                 .containsOnly(entry(88, "Colorado Avalanche"));
     }
+
+    @Test
+    public void testFilterKeys() {
+        assertThat(Maps.filterKeys(teams, k -> k > 50)).containsOnly(entry(88, "Colorado Avalanche"),
+                entry(92, "Winnipeg Jets"));
+        assertThat(teams.entrySet().stream()
+                .filter(e -> e.getKey() > 50)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                .containsOnly(entry(88, "Colorado Avalanche"),
+                        entry(92, "Winnipeg Jets"));
+
+    }
 }
