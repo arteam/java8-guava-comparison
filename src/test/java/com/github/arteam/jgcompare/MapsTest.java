@@ -125,4 +125,31 @@ public class MapsTest {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
                 .containsOnly(entry(21, "Boston Bruins"), entry(12, "Chicago Blackhawks"), entry(42, "St. Louis Blues"));
     }
+
+
+    @Test
+    public void testTransformValues() {
+        Splitter splitter = Splitter.on(" ");
+        assertThat(Maps.transformValues(teams, t -> Iterables.getLast(splitter.split(t)))).containsOnly(
+                entry(21, "Bruins"),
+                entry(24, "Kings"),
+                entry(12, "Blackhawks"),
+                entry(42, "Blues"),
+                entry(29, "Coyotes"),
+                entry(92, "Jets"),
+                entry(88, "Avalanche")
+        );
+        assertThat(teams.entrySet().stream()
+                .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), Iterables.getLast(splitter.split(e.getValue()))))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))).containsOnly(
+                entry(21, "Bruins"),
+                entry(24, "Kings"),
+                entry(12, "Blackhawks"),
+                entry(42, "Blues"),
+                entry(29, "Coyotes"),
+                entry(92, "Jets"),
+                entry(88, "Avalanche")
+        );
+
+    }
 }
