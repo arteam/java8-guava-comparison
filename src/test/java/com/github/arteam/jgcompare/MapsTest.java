@@ -30,7 +30,7 @@ public class MapsTest {
         return Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue);
     }
 
-    Map<Integer, String> teams = ImmutableMap.<Integer, String>builder()
+    private Map<Integer, String> teams = ImmutableMap.<Integer, String>builder()
             .put(21, "Boston Bruins")
             .put(24, "Los Angeles Kings")
             .put(12, "Chicago Blackhawks")
@@ -91,46 +91,54 @@ public class MapsTest {
                 .put(12, "Chicago Blackhawks")
                 .put(88, "Colorado Avalanche")
                 .build();
-        assertThat(Maps.difference(teams, stanleyCupWinners).entriesOnlyOnLeft())
-                .contains(entry(42, "St. Louis Blues"), entry(92, "Winnipeg Jets"), entry(29, "Arizona Coyotes"));
+        Map<Integer, String> teamsWithoutACup = ImmutableMap.<Integer, String>builder()
+                .put(42, "St. Louis Blues")
+                .put(92, "Winnipeg Jets")
+                .put(29, "Arizona Coyotes")
+                .build();
+        assertThat(Maps.difference(teams, stanleyCupWinners).entriesOnlyOnLeft()).isEqualTo(teamsWithoutACup);
 
-        assertThat(teams.entrySet()
-                .stream()
+        assertThat(teams.entrySet().stream()
                 .filter(e -> !stanleyCupWinners.containsKey(e.getKey()))
                 .collect(toMap()))
-                .contains(entry(42, "St. Louis Blues"), entry(92, "Winnipeg Jets"), entry(29, "Arizona Coyotes"));
+                .isEqualTo(teamsWithoutACup);
     }
 
     @Test
     public void testFilterEntries() {
         assertThat(Maps.filterEntries(teams, e -> e.getKey() > 20 && e.getValue().startsWith("C")))
-                .containsOnly(entry(88, "Colorado Avalanche"));
+                .isEqualTo(ImmutableMap.of(88, "Colorado Avalanche"));
 
         assertThat(teams.entrySet().stream()
                 .filter(e -> e.getKey() > 20 && e.getValue().startsWith("C"))
                 .collect(toMap()))
-                .containsOnly(entry(88, "Colorado Avalanche"));
+                .isEqualTo(ImmutableMap.of(88, "Colorado Avalanche"));
     }
 
     @Test
     public void testFilterKeys() {
-        assertThat(Maps.filterKeys(teams, k -> k > 50)).containsOnly(entry(88, "Colorado Avalanche"),
-                entry(92, "Winnipeg Jets"));
+        assertThat(Maps.filterKeys(teams, k -> k > 50))
+                .containsOnly(entry(88, "Colorado Avalanche"), entry(92, "Winnipeg Jets"));
+
         assertThat(teams.entrySet().stream()
                 .filter(e -> e.getKey() > 50)
                 .collect(toMap()))
-                .containsOnly(entry(88, "Colorado Avalanche"),
-                        entry(92, "Winnipeg Jets"));
+                .containsOnly(entry(88, "Colorado Avalanche"), entry(92, "Winnipeg Jets"));
 
     }
 
     @Test
     public void testFilterValues() {
-        assertThat(Maps.filterValues(teams, v -> getLastWord(v).startsWith("B")))
-                .containsOnly(entry(21, "Boston Bruins"), entry(12, "Chicago Blackhawks"), entry(42, "St. Louis Blues"));
-        assertThat(teams.entrySet().stream().filter(e -> getLastWord(e.getValue()).startsWith("B"))
+        Map<Integer, String> teamsWithNamesOnB = ImmutableMap.<Integer, String>builder()
+                .put(21, "Boston Bruins")
+                .put(12, "Chicago Blackhawks")
+                .put(42, "St. Louis Blues")
+                .build();
+        assertThat(Maps.filterValues(teams, v -> getLastWord(v).startsWith("B"))).isEqualTo(teamsWithNamesOnB);
+        assertThat(teams.entrySet().stream()
+                .filter(e -> getLastWord(e.getValue()).startsWith("B"))
                 .collect(toMap()))
-                .containsOnly(entry(21, "Boston Bruins"), entry(12, "Chicago Blackhawks"), entry(42, "St. Louis Blues"));
+                .isEqualTo(teamsWithNamesOnB);
     }
 
 
