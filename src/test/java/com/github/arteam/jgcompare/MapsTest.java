@@ -20,6 +20,12 @@ import static org.assertj.core.api.Assertions.entry;
  */
 public class MapsTest {
 
+    private static Splitter WHITESPACE_SPLITTER = Splitter.on(" ");
+
+    private static String getLastWord(String text) {
+        return Iterables.getLast(WHITESPACE_SPLITTER.split(text));
+    }
+
     private static <K, V> Collector<Map.Entry<K, V>, ?, Map<K, V>> toMap() {
         return Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue);
     }
@@ -120,10 +126,9 @@ public class MapsTest {
 
     @Test
     public void testFilterValues() {
-        Splitter splitter = Splitter.on(" ");
-        assertThat(Maps.filterValues(teams, v -> Iterables.getLast(splitter.split(v)).startsWith("B")))
+        assertThat(Maps.filterValues(teams, v -> getLastWord(v).startsWith("B")))
                 .containsOnly(entry(21, "Boston Bruins"), entry(12, "Chicago Blackhawks"), entry(42, "St. Louis Blues"));
-        assertThat(teams.entrySet().stream().filter(e -> Iterables.getLast(splitter.split(e.getValue())).startsWith("B"))
+        assertThat(teams.entrySet().stream().filter(e -> getLastWord(e.getValue()).startsWith("B"))
                 .collect(toMap()))
                 .containsOnly(entry(21, "Boston Bruins"), entry(12, "Chicago Blackhawks"), entry(42, "St. Louis Blues"));
     }
@@ -131,8 +136,7 @@ public class MapsTest {
 
     @Test
     public void testTransformValues() {
-        Splitter splitter = Splitter.on(" ");
-        assertThat(Maps.transformValues(teams, t -> Iterables.getLast(splitter.split(t)))).containsOnly(
+        assertThat(Maps.transformValues(teams, v -> getLastWord(v))).containsOnly(
                 entry(21, "Bruins"),
                 entry(24, "Kings"),
                 entry(12, "Blackhawks"),
@@ -142,7 +146,7 @@ public class MapsTest {
                 entry(88, "Avalanche")
         );
         assertThat(teams.entrySet().stream()
-                .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), Iterables.getLast(splitter.split(e.getValue()))))
+                .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), getLastWord(e.getValue())))
                 .collect(toMap())).containsOnly(
                 entry(21, "Bruins"),
                 entry(24, "Kings"),
