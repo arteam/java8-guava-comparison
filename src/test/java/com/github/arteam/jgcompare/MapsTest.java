@@ -2,14 +2,11 @@ package com.github.arteam.jgcompare;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.*;
-import org.assertj.core.api.Assertions;
-import org.assertj.core.data.MapEntry;
 import org.junit.Test;
 
 import java.util.*;
-import java.util.function.BinaryOperator;
 import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,6 +19,10 @@ import static org.assertj.core.api.Assertions.entry;
  * @author Artem Prigoda
  */
 public class MapsTest {
+
+    private static <K, V> Collector<Map.Entry<K, V>, ?, Map<K, V>> toMap() {
+        return Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue);
+    }
 
     Map<Integer, String> teams = ImmutableMap.<Integer, String>builder()
             .put(21, "Boston Bruins")
@@ -46,7 +47,8 @@ public class MapsTest {
                 88L, new Team(88, "Colorado Avalanche"));
         assertThat(Maps.uniqueIndex(teams, Team::getId)).isEqualTo(expected);
 
-        assertThat(teams.stream().collect(Collectors.toMap(Team::getId, Function.identity())))
+        assertThat(teams.stream()
+                .collect(Collectors.toMap(Team::getId, Function.identity())))
                 .isEqualTo(expected);
     }
 
@@ -89,7 +91,7 @@ public class MapsTest {
         assertThat(teams.entrySet()
                 .stream()
                 .filter(e -> !stanleyCupWinners.containsKey(e.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                .collect(toMap()))
                 .contains(entry(42, "St. Louis Blues"), entry(92, "Winnipeg Jets"), entry(29, "Arizona Coyotes"));
     }
 
@@ -100,7 +102,7 @@ public class MapsTest {
 
         assertThat(teams.entrySet().stream()
                 .filter(e -> e.getKey() > 20 && e.getValue().startsWith("C"))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                .collect(toMap()))
                 .containsOnly(entry(88, "Colorado Avalanche"));
     }
 
@@ -110,7 +112,7 @@ public class MapsTest {
                 entry(92, "Winnipeg Jets"));
         assertThat(teams.entrySet().stream()
                 .filter(e -> e.getKey() > 50)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                .collect(toMap()))
                 .containsOnly(entry(88, "Colorado Avalanche"),
                         entry(92, "Winnipeg Jets"));
 
@@ -122,7 +124,7 @@ public class MapsTest {
         assertThat(Maps.filterValues(teams, v -> Iterables.getLast(splitter.split(v)).startsWith("B")))
                 .containsOnly(entry(21, "Boston Bruins"), entry(12, "Chicago Blackhawks"), entry(42, "St. Louis Blues"));
         assertThat(teams.entrySet().stream().filter(e -> Iterables.getLast(splitter.split(e.getValue())).startsWith("B"))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                .collect(toMap()))
                 .containsOnly(entry(21, "Boston Bruins"), entry(12, "Chicago Blackhawks"), entry(42, "St. Louis Blues"));
     }
 
@@ -141,7 +143,7 @@ public class MapsTest {
         );
         assertThat(teams.entrySet().stream()
                 .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), Iterables.getLast(splitter.split(e.getValue()))))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))).containsOnly(
+                .collect(toMap())).containsOnly(
                 entry(21, "Bruins"),
                 entry(24, "Kings"),
                 entry(12, "Blackhawks"),
