@@ -136,26 +136,20 @@ public class MapsTest {
 
     @Test
     public void testTransformValues() {
-        assertThat(Maps.transformValues(teams, v -> getLastWord(v))).containsOnly(
-                entry(21, "Bruins"),
-                entry(24, "Kings"),
-                entry(12, "Blackhawks"),
-                entry(42, "Blues"),
-                entry(29, "Coyotes"),
-                entry(92, "Jets"),
-                entry(88, "Avalanche")
-        );
+        ImmutableMap teamNames = ImmutableMap.builder()
+                .put(21, "Bruins")
+                .put(24, "Kings")
+                .put(12, "Blackhawks")
+                .put(42, "Blues")
+                .put(29, "Coyotes")
+                .put(92, "Jets")
+                .put(88, "Avalanche")
+                .build();
+        assertThat(Maps.transformValues(teams, MapsTest::getLastWord)).isEqualTo(teamNames);
         assertThat(teams.entrySet().stream()
                 .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), getLastWord(e.getValue())))
-                .collect(toMap())).containsOnly(
-                entry(21, "Bruins"),
-                entry(24, "Kings"),
-                entry(12, "Blackhawks"),
-                entry(42, "Blues"),
-                entry(29, "Coyotes"),
-                entry(92, "Jets"),
-                entry(88, "Avalanche")
-        );
+                .collect(toMap()))
+                .isEqualTo(teamNames);
 
     }
 }
