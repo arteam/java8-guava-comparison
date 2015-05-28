@@ -1,4 +1,4 @@
-package com.github.arteam.jgcompare;
+package com.github.arteam.jgcompare.util;
 
 import java.util.*;
 import java.util.stream.Stream;

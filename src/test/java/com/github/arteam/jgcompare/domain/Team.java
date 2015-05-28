@@ -1,4 +1,4 @@
-package com.github.arteam.jgcompare;
+package com.github.arteam.jgcompare.domain;
 
 import java.util.Objects;
 

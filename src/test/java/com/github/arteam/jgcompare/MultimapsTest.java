@@ -1,14 +1,14 @@
 package com.github.arteam.jgcompare;
 
+import com.github.arteam.jgcompare.domain.TeamDivision;
 import com.google.common.collect.*;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.github.arteam.jgcompare.TeamDivision.of;
+import static com.github.arteam.jgcompare.domain.TeamDivision.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 

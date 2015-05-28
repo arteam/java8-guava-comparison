@@ -1,5 +1,6 @@
 package com.github.arteam.jgcompare;
 
+import com.github.arteam.jgcompare.util.StreamUtils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -7,12 +8,10 @@ import org.junit.Test;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
