@@ -26,6 +26,18 @@ public class IterablesTest {
     Stream<String> stream = Stream.of("as", "q", "def");
 
     @Test
+    public void testAddAll() {
+        List<String> sink = Lists.newArrayList("grey", "two", "vertex");
+        List<String> copy1 = Lists.newArrayList(sink);
+        Iterables.addAll(copy1, source);
+        assertThat(copy1).containsExactly("grey", "two", "vertex", "as", "q", "def");
+
+        List<String> copy2 = Lists.newArrayList(sink);
+        stream.forEachOrdered(copy2::add);
+        assertThat(copy2).containsExactly("grey", "two", "vertex", "as", "q", "def");
+    }
+
+    @Test
     public void testAll() {
         assertThat(Iterables.all(source, it -> !it.isEmpty())).isTrue();
         assertThat(stream.allMatch(it -> !it.isEmpty())).isTrue();
@@ -293,7 +305,6 @@ public class IterablesTest {
         assertThat(stream.collect(Collectors.joining(", ", "[", "]"))).isEqualTo("[as, q, def]");
 
     }
-
 
 }
 
