@@ -2,7 +2,7 @@ package com.github.arteam.jgcompare;
 
 import com.github.arteam.jgcompare.domain.TeamDivision;
 import com.google.common.collect.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;

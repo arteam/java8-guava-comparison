@@ -3,11 +3,9 @@ package com.github.arteam.jgcompare;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -64,7 +62,7 @@ public class SetsTest {
         assertThat(Sets.symmetricDifference(first, second)).containsOnly("bully", "vertex", "moan");
 
         assertThat(Stream.concat(first.stream().filter(s -> !second.contains(s)),
-                second.stream().filter(s -> !first.contains(s)))
+                        second.stream().filter(s -> !first.contains(s)))
                 .collect(Collectors.toSet()))
                 .containsOnly("bully", "vertex", "moan");
 

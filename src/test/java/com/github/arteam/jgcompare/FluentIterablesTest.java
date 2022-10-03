@@ -3,7 +3,7 @@ package com.github.arteam.jgcompare;
 import com.google.common.base.Splitter;
 import com.google.common.collect.*;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;

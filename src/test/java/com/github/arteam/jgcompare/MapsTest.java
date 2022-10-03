@@ -3,7 +3,7 @@ package com.github.arteam.jgcompare;
 import com.github.arteam.jgcompare.domain.Team;
 import com.google.common.base.Splitter;
 import com.google.common.collect.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 import java.util.function.Function;
