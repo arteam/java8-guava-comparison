@@ -1,3 +1,3 @@
-# Comparasion of Guava and Java 8 Stream API
+# Comparison of Guava and Java 8 Stream API
 
-Expirements how to do things in Java 8 comparing to Guava.
+Some experiments with Stream operations on Collections in Java 8+ comparing with Guava.
