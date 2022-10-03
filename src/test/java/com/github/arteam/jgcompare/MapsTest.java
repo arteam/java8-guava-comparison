@@ -2,10 +2,21 @@ package com.github.arteam.jgcompare;
 
 import com.github.arteam.jgcompare.domain.Team;
 import com.google.common.base.Splitter;
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NavigableSet;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -52,10 +63,10 @@ public class MapsTest {
                 12L, new Team(12, "Chicago Blackhawks"),
                 42L, new Team(42, "St. Louis Blues"),
                 88L, new Team(88, "Colorado Avalanche"));
-        assertThat(Maps.uniqueIndex(teams, Team::getId)).isEqualTo(expected);
+        assertThat(Maps.uniqueIndex(teams, Team::id)).isEqualTo(expected);
 
         assertThat(teams.stream()
-                .collect(Collectors.toMap(Team::getId, Function.identity())))
+                .collect(Collectors.toMap(Team::id, Function.identity())))
                 .isEqualTo(expected);
     }
 

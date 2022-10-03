@@ -40,8 +40,8 @@ public class MultimapsTest {
 
     @Test
     public void testIndex() {
-        assertThat(Multimaps.index(teams, TeamDivision::getDivision)).isEqualTo(teamsByDivision);
-        assertThat(teams.stream().collect(Collectors.groupingBy(TeamDivision::getDivision)))
+        assertThat(Multimaps.index(teams, TeamDivision::division)).isEqualTo(teamsByDivision);
+        assertThat(teams.stream().collect(Collectors.groupingBy(TeamDivision::division)))
                 .contains(entry("Pacific", ImmutableList.of(of("Calgary Flames", "Pacific"), of("Vancouver Canucks", "Pacific"))))
                 .contains(entry("Atlantic", ImmutableList.of(of("Toronto Maple Leafs", "Atlantic"), of("Florida Panthers", "Atlantic"))))
                 .contains(entry("Metropolitan", ImmutableList.of(of("Detroit Red Wings", "Metropolitan"), of("New York Rangers", "Metropolitan"))))

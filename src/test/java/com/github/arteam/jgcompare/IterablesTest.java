@@ -155,8 +155,8 @@ public class IterablesTest {
 
         // Rather tricky way
         assertThat(StreamUtils.withIndex(stream)
-                .filter(e -> e.getElement().length() == 1)
-                .map(e -> e.getIndex())
+                .filter(e -> e.element().length() == 1)
+                .map(e -> e.index())
                 .findFirst()
                 .get())
                 .isEqualTo(1);
@@ -187,7 +187,7 @@ public class IterablesTest {
         int partitionSize = 3;
         List<List<String>> partitions = StreamUtils.withIndex(source.stream())
                 .collect(ArrayList::new, (lists, el) -> {
-                    int place = el.getIndex() % partitionSize;
+                    int place = el.index() % partitionSize;
                     List<String> part;
                     if (place == 0) {
                         part = new ArrayList<>();
@@ -195,7 +195,7 @@ public class IterablesTest {
                     } else {
                         part = lists.get(lists.size() - 1);
                     }
-                    part.add(el.getElement());
+                    part.add(el.element());
                 }, ArrayList::addAll);
         assertThat(partitions).containsExactly(
                 ImmutableList.of("trash", "talk", "arg"),
@@ -204,8 +204,8 @@ public class IterablesTest {
 
         // Grouping collector
         assertThat(StreamUtils.withIndex(source.stream())
-                .collect(Collectors.groupingBy(el -> el.getIndex() / partitionSize,
-                        Collectors.mapping(el -> el.getElement(), Collectors.toList())))
+                .collect(Collectors.groupingBy(el -> el.index() / partitionSize,
+                        Collectors.mapping(el -> el.element(), Collectors.toList())))
                 .values()).containsExactly(
                 ImmutableList.of("trash", "talk", "arg"),
                 ImmutableList.of("loose", "fade", "cross"),
@@ -222,8 +222,8 @@ public class IterablesTest {
                 Arrays.asList("dump", "bust", null));
 
         Collection<List<String>> partitions = StreamUtils.withIndex(source.stream())
-                .collect(Collectors.collectingAndThen(Collectors.groupingBy(el -> el.getIndex() / 3,
-                        Collectors.mapping(el -> el.getElement(), Collectors.toList())), map -> {
+                .collect(Collectors.collectingAndThen(Collectors.groupingBy(el -> el.index() / 3,
+                        Collectors.mapping(el -> el.element(), Collectors.toList())), map -> {
                     List<String> partition = map.get(map.size() - 1);
                     int i = partition.size();
                     while (i++ < 3) {

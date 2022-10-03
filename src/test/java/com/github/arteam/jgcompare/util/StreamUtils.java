@@ -1,6 +1,8 @@
 package com.github.arteam.jgcompare.util;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -23,22 +25,6 @@ public class StreamUtils {
         }, Spliterator.ORDERED | Spliterator.IMMUTABLE), false);
     }
 
-    public static class ElementIndex<T> {
-
-        private final int index;
-        private final T element;
-
-        public ElementIndex(int index, T element) {
-            this.index = index;
-            this.element = element;
-        }
-
-        public int getIndex() {
-            return index;
-        }
-
-        public T getElement() {
-            return element;
-        }
+    public record ElementIndex<T>(int index, T element) {
     }
 }
