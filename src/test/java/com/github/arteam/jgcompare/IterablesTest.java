@@ -6,8 +6,12 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -158,7 +162,7 @@ public class IterablesTest {
                 .filter(e -> e.element().length() == 1)
                 .map(e -> e.index())
                 .findFirst()
-                .get())
+                .orElseThrow())
                 .isEqualTo(1);
     }
 

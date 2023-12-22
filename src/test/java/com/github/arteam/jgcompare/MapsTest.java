@@ -156,7 +156,7 @@ public class MapsTest {
 
     @Test
     public void testTransformValues() {
-        ImmutableMap teamNames = ImmutableMap.builder()
+        Map<Integer, String> teamNames = ImmutableMap.<Integer, String>builder()
                 .put(21, "Bruins")
                 .put(24, "Kings")
                 .put(12, "Blackhawks")
