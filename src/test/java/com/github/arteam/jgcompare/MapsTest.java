@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.entry;
  */
 public class MapsTest {
 
-    private static Splitter WHITESPACE_SPLITTER = Splitter.on(" ");
+    private static final Splitter WHITESPACE_SPLITTER = Splitter.on(" ");
 
     private static String getLastWord(String text) {
         return Iterables.getLast(WHITESPACE_SPLITTER.split(text));
@@ -42,7 +42,7 @@ public class MapsTest {
         return Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue);
     }
 
-    private Map<Integer, String> teams = ImmutableMap.<Integer, String>builder()
+    private final Map<Integer, String> teams = ImmutableMap.<Integer, String>builder()
             .put(21, "Boston Bruins")
             .put(24, "Los Angeles Kings")
             .put(12, "Chicago Blackhawks")

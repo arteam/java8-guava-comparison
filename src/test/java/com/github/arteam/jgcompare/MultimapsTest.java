@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSetMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +35,7 @@ public class MultimapsTest {
             .add(new TeamDivision("Dallas Stars", "Central"))
             .build();
 
-    ImmutableListMultimap<String, TeamDivision> teamsByDivision = ImmutableListMultimap.<String, TeamDivision>builder()
+    ListMultimap<String, TeamDivision> teamsByDivision = ImmutableListMultimap.<String, TeamDivision>builder()
             .putAll("Pacific",
                     new TeamDivision("Calgary Flames", "Pacific"),
                     new TeamDivision("Vancouver Canucks", "Pacific"))
@@ -69,7 +70,7 @@ public class MultimapsTest {
 
     @Test
     public void testFromMap() {
-        ImmutableMap<String, String> topTeams = ImmutableMap.of("Pacific", "Anaheim", "Atlantic", "Montreal",
+        Map<String, String> topTeams = ImmutableMap.of("Pacific", "Anaheim", "Atlantic", "Montreal",
                 "Metropolitan", "New York", "Central", "St. Louis");
         assertThat(Multimaps.forMap(topTeams)).isEqualTo(ImmutableSetMultimap.<String, String>builder()
                 .put("Pacific", "Anaheim")

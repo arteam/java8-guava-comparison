@@ -70,7 +70,7 @@ public class IterablesTest {
 
     @Test
     public void testCycle() {
-        ImmutableList<String> expected = ImmutableList.of("as", "q", "def", "as", "q", "def", "as", "q", "def", "as");
+        List<String> expected = ImmutableList.of("as", "q", "def", "as", "q", "def", "as", "q", "def", "as");
 
         Iterator<String> iterator = Iterables.cycle(source).iterator();
         List<String> cycled = Lists.newArrayList();
